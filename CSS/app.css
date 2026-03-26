@@ -1,0 +1,457 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-color: #ececf3;
+  --clock-bg: #ececf3;
+  --hand-color: #505065;
+  --sec-hand-color: #3b3bbf;
+  --color: #000000;
+  --watch-color: #000000;
+  --shadow: 10px 10px 20px #ced1d9, -10px -10px 20px #ffff;
+}
+
+body.dark-mode-active {
+  --bg-color: #25252d;
+  --clock-bg: #25252d;
+  --hand-color: #b6b6c5;
+  --color: #ffffff;
+  --sec-hand-color: #3b3bbf;
+  --watch-color: #efeff2;
+  --shadow: 10px 10px 20px #1a1a20, -10px -10px 20px #30303a;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  background: var(--bg-color);
+  font-family: sans-serif;
+
+  transition: background 0.4s ease;
+}
+
+main {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.clock {
+  position: relative;
+  width: 350px;
+  height: 350px;
+  margin-bottom: 20px;
+  background-color: var(--clock-bg);
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clock span {
+  position: absolute;
+  inset: 20px;
+  text-align: center;
+  transform: rotate(calc(30deg * var(--i)));
+}
+
+.clock span b {
+  transform: rotate(calc(-30deg * var(--i)));
+  color: var(--color);
+  display: inline-block;
+  font-size: 18px;
+}
+
+.clock::before {
+  content: '';
+  height: 12px;
+  width: 12px;
+  background-color: #3b3bbf;
+  border-radius: 50%;
+  border: 2.5px solid #ececf3;
+  z-index: 10;
+}
+
+.hand {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  list-style: none;
+}
+
+.hand li {
+  position: absolute;
+  width: 5px;
+  height: var(--h);
+  background: var(--hand-color);
+  border-radius: 20px;
+}
+
+#sec li {
+  background: var(--sec-hand-color);
+}
+
+.watch {
+  height: 200px;
+  width: 400px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.watch span {
+  font-size: 12px;
+  font-weight: 600;
+  position: relative;
+  left: 25%;
+  top: 7%;
+}
+
+.watch h2 {
+  font-size: 70px;
+  color: var(--watch-color);
+}
+.meridiem {
+  color: var(--watch-color);
+}
+.watch p {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--hand-color);
+}
+
+/* --------- day and night toggle css ---------- */
+
+.light-drak-toggle {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  margin: 15px;
+  padding: 0px 10px;
+  width: 150px;
+  height: 50px;
+  background-color: var(--bg-color);
+  color: var(--color);
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+  border-radius: 40px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.dark-mode p,
+.light-mode p {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dark-mode,
+.light-mode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  position: absolute;
+  transition: transform 0.4s ease;
+}
+
+.active-toggle {
+  transform: translateY(0px) !important;
+  opacity: 1;
+}
+
+.hidden-toggle {
+  transform: translateY(40px);
+  opacity: 0;
+}
+
+.set-alarm-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 15px;
+}
+
+.alarmbtn {
+  background: var(--clock-bg);
+  color: var(--color);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.alarmbtn:active {
+  transform: scale(0.96);
+}
+
+/* ===== POPUP OVERLAY ===== */
+.popup-main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 100;
+
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+/* ===== POPUP CARD ===== */
+.popup-card {
+  width: 92%;
+  max-width: 420px;
+
+  padding: 28px 24px;
+
+  border-radius: 22px;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.25),
+    inset 0 0 8px rgba(255, 255, 255, 0.08);
+
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  transform: scale(0.85);
+  opacity: 0;
+
+  transition: all 0.3s ease;
+}
+
+/* show animation */
+.popup-main:not(.hidden) .popup-card {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* ===== TITLE ===== */
+.popup-card h2 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+/* ===== INPUT ===== */
+.time-inputs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.time-inputs input {
+  width: 100%;
+  padding: 14px;
+
+  font-size: 28px;
+  font-weight: 500;
+
+  border-radius: 14px;
+  border: none;
+  outline: none;
+
+  text-align: center;
+
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1);
+}
+
+/* ===== BUTTONS ===== */
+.popup-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.popup-actions button {
+  flex: 1;
+  padding: 12px;
+
+  border: none;
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* cancel */
+.cancel-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* set */
+.set-btn {
+  background: linear-gradient(135deg, #3b3bbf, #5f5fff);
+  color: white;
+}
+
+.set-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* click effect */
+.popup-actions button:active {
+  transform: scale(0.96);
+}
+
+/* hidden state */
+.popup-main.hidden {
+  display: none;
+}
+
+/*========== stop alaram future ==========*/
+/* ===== STOP ALARM OVERLAY ===== */
+.stop-alarm-main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: radial-gradient(circle, #1a1a1a, #000);
+  backdrop-filter: blur(8px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 200;
+
+  transition: all 0.3s ease;
+}
+
+/* hidden */
+.stop-alarm-main.hidden {
+  display: none;
+}
+
+/* ===== CONTAINER ===== */
+.stop-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+/* ===== TEXT ===== */
+.alarm-text {
+  font-size: 22px;
+  color: #fff;
+  letter-spacing: 1px;
+  animation: blink 1s infinite;
+}
+
+/* blinking text */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* ===== STOP BUTTON ===== */
+.stop-alarm-btn {
+  width: 150px;
+  height: 150px;
+
+  border-radius: 50%;
+  border: none;
+
+  background: radial-gradient(circle, #ff3b3b, #b30000);
+  color: white;
+
+  font-size: 20px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  box-shadow:
+    0 0 30px rgba(255, 0, 0, 0.6),
+    inset 0 0 20px rgba(255, 255, 255, 0.2);
+
+  animation: pulse 1.5s infinite;
+}
+
+/* pulse effect 🔥 */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 50px rgba(255, 0, 0, 0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* click effect */
+.stop-alarm-btn:active {
+  transform: scale(0.9);
+}
+
+/* ===== HINT ===== */
+.hint {
+  font-size: 14px;
+  color: #aaa;
+}
